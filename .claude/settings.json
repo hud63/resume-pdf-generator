@@ -1,0 +1,16 @@
+{
+  "description": "Resume Rewriter Project - Tailored resume generation from job descriptions",
+  "permissions": {
+    "allow": [
+      "Read",
+      "Write", 
+      "Glob",
+      "LS",
+      "Bash"
+    ]
+  },
+  "env": {
+    "PROJECT_NAME": "ResumeReWriter",
+    "RESUME_FORMAT": "pdf"
+  }
+}
