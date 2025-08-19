@@ -1,21 +1,22 @@
 #!/usr/bin/env python3
 """
-Simple Resume PDF Converter using reportlab
-Creates PDFs without external dependencies
+Professional Resume PDF Converter using reportlab
+Creates high-quality PDFs with professional typography and formatting
 """
 
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
-from reportlab.lib.colors import black, gray
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.colors import black, HexColor
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, KeepTogether
+from reportlab.lib.enums import TA_LEFT, TA_JUSTIFY
 import re
 import sys
 import os
 
-def convert_markdown_to_pdf_simple(md_file_path, output_pdf_path=None):
+def convert_markdown_to_pdf_professional(md_file_path, output_pdf_path=None):
     """
-    Convert markdown resume to PDF using reportlab (no external dependencies)
+    Convert markdown resume to professional PDF with enhanced typography and formatting
     """
     
     # Generate output path if not provided
@@ -30,119 +31,244 @@ def convert_markdown_to_pdf_simple(md_file_path, output_pdf_path=None):
     except FileNotFoundError:
         raise FileNotFoundError(f"Markdown file not found: {md_file_path}")
     
-    # Create PDF document
+    # Create PDF document with professional margins and metadata
     doc = SimpleDocTemplate(
         output_pdf_path,
         pagesize=letter,
         rightMargin=0.75*inch,
         leftMargin=0.75*inch,
-        topMargin=0.75*inch,
-        bottomMargin=0.75*inch
+        topMargin=0.6*inch,
+        bottomMargin=0.6*inch,
+        title="Mark Cetola - Resume",
+        author="Mark Cetola",
+        subject="Professional Resume - CX AI Workflow Specialist",
+        creator="Resume PDF Converter",
+        keywords="resume, AI, customer experience, workflow specialist"
     )
     
     # Get styles
     styles = getSampleStyleSheet()
     
-    # Custom styles
+    # Professional color scheme
+    dark_blue = HexColor('#2C3E50')
+    medium_gray = HexColor('#5D6D7E')
+    light_gray = HexColor('#85929E')
+    
+    # Enhanced custom styles for professional appearance
     name_style = ParagraphStyle(
         'NameStyle',
         parent=styles['Heading1'],
-        fontSize=18,
-        spaceAfter=6,
-        textColor=black,
-        fontName='Helvetica-Bold'
+        fontSize=22,
+        spaceAfter=8,
+        spaceBefore=0,
+        textColor=dark_blue,
+        fontName='Helvetica-Bold',
+        alignment=TA_LEFT
     )
     
     contact_style = ParagraphStyle(
         'ContactStyle',
         parent=styles['Normal'],
-        fontSize=10,
-        spaceAfter=12,
-        textColor=gray
+        fontSize=11,
+        spaceAfter=16,
+        spaceBefore=2,
+        textColor=medium_gray,
+        fontName='Helvetica',
+        alignment=TA_LEFT
     )
     
-    heading_style = ParagraphStyle(
-        'HeadingStyle',
-        parent=styles['Heading2'],
-        fontSize=14,
-        spaceAfter=6,
-        spaceBefore=12,
+    summary_style = ParagraphStyle(
+        'SummaryStyle',
+        parent=styles['Normal'],
+        fontSize=11,
+        spaceAfter=16,
+        spaceBefore=0,
         textColor=black,
-        fontName='Helvetica-Bold'
+        fontName='Helvetica',
+        alignment=TA_JUSTIFY,
+        leading=14
+    )
+    
+    section_heading_style = ParagraphStyle(
+        'SectionHeadingStyle',
+        parent=styles['Heading2'],
+        fontSize=15,
+        spaceAfter=8,
+        spaceBefore=18,
+        textColor=dark_blue,
+        fontName='Helvetica-Bold',
+        alignment=TA_LEFT
+    )
+    
+    subsection_heading_style = ParagraphStyle(
+        'SubsectionHeadingStyle',
+        parent=styles['Heading3'],
+        fontSize=13,
+        spaceAfter=4,
+        spaceBefore=2,
+        textColor=dark_blue,
+        fontName='Helvetica-Bold',
+        alignment=TA_LEFT
     )
     
     job_title_style = ParagraphStyle(
         'JobTitleStyle',
-        parent=styles['Heading3'],
+        parent=styles['Normal'],
+        fontSize=12,
+        spaceAfter=6,
+        spaceBefore=12,
+        textColor=dark_blue,
+        fontName='Helvetica-Bold',
+        alignment=TA_LEFT
+    )
+    
+    company_date_style = ParagraphStyle(
+        'CompanyDateStyle',
+        parent=styles['Normal'],
         fontSize=11,
-        spaceAfter=4,
-        spaceBefore=8,
-        textColor=black,
-        fontName='Helvetica-Bold'
+        spaceAfter=8,
+        spaceBefore=2,
+        textColor=medium_gray,
+        fontName='Helvetica',
+        alignment=TA_LEFT
     )
     
     body_style = ParagraphStyle(
         'BodyStyle',
         parent=styles['Normal'],
-        fontSize=10,
-        spaceAfter=6,
-        alignment=0,  # Left align
-        fontName='Helvetica'
+        fontSize=11,
+        spaceAfter=8,
+        spaceBefore=0,
+        textColor=black,
+        fontName='Helvetica',
+        alignment=TA_LEFT,
+        leading=13
     )
     
     bullet_style = ParagraphStyle(
         'BulletStyle',
         parent=styles['Normal'],
-        fontSize=10,
-        spaceAfter=3,
-        leftIndent=20,
-        bulletIndent=10,
-        fontName='Helvetica'
+        fontSize=10.5,
+        spaceAfter=4,
+        spaceBefore=1,
+        leftIndent=18,
+        bulletIndent=0,
+        textColor=black,
+        fontName='Helvetica',
+        alignment=TA_LEFT,
+        leading=13
     )
     
-    # Parse content
+    t_shaped_core_style = ParagraphStyle(
+        'TShapedCoreStyle',
+        parent=styles['Normal'],
+        fontSize=11,
+        spaceAfter=4,
+        spaceBefore=2,
+        textColor=black,
+        fontName='Helvetica',
+        alignment=TA_LEFT,
+        leading=14
+    )
+    
+    # Parse content with enhanced formatting
     story = []
     lines = content.split('\n')
+    current_section = None
     
-    for line in lines:
-        line = line.strip()
+    i = 0
+    while i < len(lines):
+        line = lines[i].strip()
+        
         if not line:
+            i += 1
             continue
             
-        # Name (first bold line)
-        if line.startswith('**') and line.endswith('**') and 'MARK CETOLA' in line:
+        # Name (first bold line with MARK CETOLA)
+        if line.startswith('**') and line.endswith('**') and ('MARK CETOLA' in line.upper() or 'Mark Cetola' in line):
             name = line.replace('**', '')
             story.append(Paragraph(name, name_style))
+            current_section = 'header'
             
         # Contact info (line with email/phone)
-        elif '@' in line and '|' in line:
+        elif '@' in line and ('|' in line or 'linkedin' in line.lower()):
             story.append(Paragraph(line, contact_style))
+            
+        # Summary paragraph (first non-header content)
+        elif current_section == 'header' and not line.startswith('**') and not line.startswith('-') and '|' not in line:
+            story.append(Paragraph(line, summary_style))
+            current_section = 'summary'
             
         # Section headers (lines that start with **)
         elif line.startswith('**') and line.endswith('**'):
             header = line.replace('**', '')
-            story.append(Paragraph(header, heading_style))
+            story.append(Paragraph(header, section_heading_style))
+            current_section = header.lower()
             
-        # Job titles (lines with company | title | dates)
+        # T-shaped skills section special handling (works for any section containing "professional")
+        elif 'professional' in current_section and ('full-stack' in current_section or 'client' in current_section or 'customer' in current_section):
+            if line.startswith('Core:'):
+                story.append(Paragraph(f"<b>Core:</b> {line[5:].strip()}", t_shaped_core_style))
+            elif line.startswith('Adjacent:'):
+                story.append(Paragraph(f"<b>Adjacent:</b> {line[9:].strip()}", t_shaped_core_style))
+            elif line.startswith('Cross-functional:'):
+                story.append(Paragraph(f"<b>Cross-functional:</b> {line[17:].strip()}", t_shaped_core_style))
+            else:
+                story.append(Paragraph(line, body_style))
+                
+        # General T-shaped skills handling for any line containing these patterns
+        elif line.startswith('Core:') or line.startswith('Adjacent:') or line.startswith('Cross-functional:'):
+            if line.startswith('Core:'):
+                story.append(Paragraph(f"<b>Core:</b> {line[5:].strip()}", t_shaped_core_style))
+            elif line.startswith('Adjacent:'):
+                story.append(Paragraph(f"<b>Adjacent:</b> {line[9:].strip()}", t_shaped_core_style))
+            elif line.startswith('Cross-functional:'):
+                story.append(Paragraph(f"<b>Cross-functional:</b> {line[17:].strip()}", t_shaped_core_style))
+                
+        # Job titles and company info (enhanced parsing)
         elif '|' in line and ('202' in line or 'Present' in line):
-            # Make company name bold and remove ** markdown
-            parts = line.split('|')
+            parts = [p.strip() for p in line.split('|')]
             if len(parts) >= 3:
-                company = parts[0].strip().replace('**', '')  # Remove ** markdown
-                rest = '|'.join(parts[1:])
-                formatted_line = f"<b>{company}</b> |{rest}"
-                story.append(Paragraph(formatted_line, job_title_style))
+                # Format: **Job Title** | Company | Location | Date
+                if parts[0].startswith('**') and parts[0].endswith('**'):
+                    job_title = parts[0].replace('**', '')
+                    company = parts[1]
+                    location_date = ' | '.join(parts[2:])
+                    
+                    story.append(Paragraph(job_title, job_title_style))
+                    story.append(Paragraph(location_date, company_date_style))
+                    story.append(Paragraph(company, company_date_style))
+                else:
+                    # Format: Company | Job Title | Date | Location
+                    company = parts[0]
+                    job_title = parts[1] if len(parts) > 1 else parts[0]
+                    location_date = ' | '.join(parts[2:])
+                    
+                    story.append(Paragraph(job_title, job_title_style))
+                    story.append(Paragraph(location_date, company_date_style))
+                    story.append(Paragraph(company, company_date_style))
             else:
                 story.append(Paragraph(line, job_title_style))
-            
-        # Bullet points
+                
+        # Bullet points with enhanced formatting
         elif line.startswith('- '):
-            bullet_text = line[2:]  # Remove "- "
+            bullet_text = line[2:].strip()
             story.append(Paragraph(f"• {bullet_text}", bullet_style))
             
-        # Regular paragraphs
+        # Regular paragraphs - clean markdown formatting
         else:
-            story.append(Paragraph(line, body_style))
+            # Clean up markdown formatting in regular content
+            clean_line = line
+            
+            # Handle bold text formatting **text** -> <b>text</b>
+            clean_line = re.sub(r'\*\*(.*?)\*\*', r'<b>\1</b>', clean_line)
+            
+            # Handle any remaining ** markers that aren't paired
+            clean_line = clean_line.replace('**', '')
+            
+            story.append(Paragraph(clean_line, body_style))
+            
+        i += 1
     
     # Build PDF
     try:
@@ -162,7 +288,7 @@ def main():
     output_file = sys.argv[2] if len(sys.argv) > 2 else None
     
     try:
-        pdf_path = convert_markdown_to_pdf_simple(md_file, output_file)
+        pdf_path = convert_markdown_to_pdf_professional(md_file, output_file)
         print(f"PDF created successfully: {pdf_path}")
     except Exception as e:
         print(f"Error: {str(e)}")
