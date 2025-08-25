@@ -7,7 +7,7 @@
     <style>
         /* Dynamic font scaling CSS variables */
         :root {
-            --font-scale: 1.2;
+            --font-scale: 1.15;
             --header-font-size: calc(36px * var(--font-scale));
             --tagline-font-size: calc(15px * var(--font-scale));
             --contact-font-size: calc(12px * var(--font-scale));
@@ -54,7 +54,7 @@
             .page-break { page-break-before: always; }
             .no-print { display: none; }
             
-            /* Force single-page cutoff */
+            /* Force single-page cutoff with better height calculations */
             .resume-container {
                 height: 11in !important;
                 max-height: 11in !important; 
@@ -63,17 +63,17 @@
             }
             
             .content {
-                max-height: calc(11in - 140px) !important;
+                max-height: calc(11in - 120px) !important;
                 overflow: hidden !important;
             }
             
             .sidebar {
-                max-height: calc(11in - 140px) !important;
+                max-height: calc(11in - 120px) !important;
                 overflow: hidden !important;
             }
             
             .main-content {
-                max-height: calc(11in - 140px) !important;
+                max-height: calc(11in - 120px) !important;
                 overflow: hidden !important;
             }
         }

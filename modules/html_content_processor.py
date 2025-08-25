@@ -271,6 +271,11 @@ class HTMLContentProcessor(ContentProcessor):
             line = line.strip()
             if line.startswith('- '):
                 skill = line[2:].strip()
+                # Clean markdown formatting (remove ** and extra characters)
+                skill = skill.replace('**', '').replace('*', '')
+                # Remove colons at the end if they exist
+                if skill.endswith(':'):
+                    skill = skill[:-1]
                 skills.append(skill)
         
         # Group skills (simplified approach)
@@ -400,22 +405,22 @@ class HTMLContentProcessor(ContentProcessor):
         
         total_content_estimate += experience_content
         
-        # Dynamic single-page limits and font scaling
-        SINGLE_PAGE_LIMIT = 4500  # Conservative limit for trimming
-        OPTIMAL_CONTENT_MIN = 3500  # Minimum for large fonts
-        OPTIMAL_CONTENT_MAX = 4200  # Maximum for standard fonts
+        # Dynamic single-page limits and font scaling (adjusted for better page fitting)
+        SINGLE_PAGE_LIMIT = 4300  # More conservative limit for trimming
+        OPTIMAL_CONTENT_MIN = 3300  # Minimum for large fonts
+        OPTIMAL_CONTENT_MAX = 4000  # Maximum for standard fonts
         
         print(f"[OPTIMIZE] Estimated content length: {total_content_estimate} chars")
         print(f"[OPTIMIZE] Single-page target: {SINGLE_PAGE_LIMIT} chars")
         
-        # Calculate font scale factor based on content density
+        # Calculate font scale factor based on content density (more conservative scaling)
         if total_content_estimate <= OPTIMAL_CONTENT_MIN:
-            # Low content - scale up fonts significantly
-            content.font_scale_factor = 1.3
+            # Low content - scale up fonts moderately
+            content.font_scale_factor = 1.2
             print(f"[OPTIMIZE] Low content density - scaling fonts to {content.font_scale_factor}x")
         elif total_content_estimate <= OPTIMAL_CONTENT_MAX:
-            # Medium content - scale up fonts moderately
-            content.font_scale_factor = 1.15
+            # Medium content - scale up fonts slightly
+            content.font_scale_factor = 1.1
             print(f"[OPTIMIZE] Medium content density - scaling fonts to {content.font_scale_factor}x")
         elif total_content_estimate <= SINGLE_PAGE_LIMIT:
             # Standard content - use normal fonts
@@ -423,7 +428,7 @@ class HTMLContentProcessor(ContentProcessor):
             print("[OPTIMIZE] Content fits with standard fonts")
         else:
             # Over limit - use smaller fonts and trim content
-            content.font_scale_factor = 0.95
+            content.font_scale_factor = 0.92
             print(f"[OPTIMIZE] High content density - scaling fonts to {content.font_scale_factor}x and trimming")
         
         if total_content_estimate <= SINGLE_PAGE_LIMIT:
@@ -456,12 +461,12 @@ class HTMLContentProcessor(ContentProcessor):
                 print(f"[OPTIMIZE] Optimized to {max_achievements} achievements per job")
                 content.experiences = trimmed_experiences
                 
-                # Recalculate font scaling for trimmed content
+                # Recalculate font scaling for trimmed content (more conservative)
                 if trimmed_total <= OPTIMAL_CONTENT_MIN:
-                    content.font_scale_factor = 1.2
+                    content.font_scale_factor = 1.15
                     print(f"[OPTIMIZE] Trimmed content allows larger fonts: {content.font_scale_factor}x")
                 elif trimmed_total <= OPTIMAL_CONTENT_MAX:
-                    content.font_scale_factor = 1.1
+                    content.font_scale_factor = 1.05
                     print(f"[OPTIMIZE] Trimmed content allows moderate font scaling: {content.font_scale_factor}x")
                 else:
                     content.font_scale_factor = 1.0
