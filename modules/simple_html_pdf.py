@@ -141,7 +141,7 @@ class SimpleHTMLPDFGenerator:
             html_abs_path = os.path.abspath(html_path)
             pdf_abs_path = os.path.abspath(pdf_output_path)
             
-            # Browser command for PDF generation
+            # Browser command for PDF generation with single-page enforcement
             cmd = [
                 browser_cmd,
                 "--headless",
@@ -151,6 +151,11 @@ class SimpleHTMLPDFGenerator:
                 "--disable-web-security",   # Allow local file access
                 "--run-all-compositor-stages-before-draw",
                 "--virtual-time-budget=5000",  # Give time for fonts to load
+                "--print-paper-width=8.5",      # Force US Letter width
+                "--print-paper-height=11.0",    # Force US Letter height  
+                "--print-margins-type=1",       # No margins
+                "--force-device-scale-factor=1.0",  # Prevent scaling
+                "--window-size=816,1056",       # 8.5"x11" at 96 DPI
                 "--print-to-pdf=" + pdf_abs_path,
                 "file://" + html_abs_path
             ]

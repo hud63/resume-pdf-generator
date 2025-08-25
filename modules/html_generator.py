@@ -140,7 +140,8 @@ class HTMLResumeGenerator:
             'languages': content.languages,
             'technical': content.technical,
             'experiences': content.experiences,
-            'professional_development': content.professional_development
+            'professional_development': content.professional_development,
+            'font_scale_factor': content.font_scale_factor  # Dynamic font scaling
         }
     
     def preview_content_structure(self, markdown_path: str, photo_path: Optional[str] = None):

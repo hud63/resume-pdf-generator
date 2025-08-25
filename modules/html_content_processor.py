@@ -23,6 +23,7 @@ class StructuredContent:
     technical: List[Dict[str, str]]
     experiences: List[Dict[str, any]]
     professional_development: List[str]
+    font_scale_factor: float = 1.0  # Dynamic font scaling factor
 
 class HTMLContentProcessor(ContentProcessor):
     """
@@ -399,14 +400,34 @@ class HTMLContentProcessor(ContentProcessor):
         
         total_content_estimate += experience_content
         
-        # Rough single-page limit (empirically determined)
-        SINGLE_PAGE_LIMIT = 4500  # characters
+        # Dynamic single-page limits and font scaling
+        SINGLE_PAGE_LIMIT = 4500  # Conservative limit for trimming
+        OPTIMAL_CONTENT_MIN = 3500  # Minimum for large fonts
+        OPTIMAL_CONTENT_MAX = 4200  # Maximum for standard fonts
         
         print(f"[OPTIMIZE] Estimated content length: {total_content_estimate} chars")
         print(f"[OPTIMIZE] Single-page target: {SINGLE_PAGE_LIMIT} chars")
         
+        # Calculate font scale factor based on content density
+        if total_content_estimate <= OPTIMAL_CONTENT_MIN:
+            # Low content - scale up fonts significantly
+            content.font_scale_factor = 1.3
+            print(f"[OPTIMIZE] Low content density - scaling fonts to {content.font_scale_factor}x")
+        elif total_content_estimate <= OPTIMAL_CONTENT_MAX:
+            # Medium content - scale up fonts moderately
+            content.font_scale_factor = 1.15
+            print(f"[OPTIMIZE] Medium content density - scaling fonts to {content.font_scale_factor}x")
+        elif total_content_estimate <= SINGLE_PAGE_LIMIT:
+            # Standard content - use normal fonts
+            content.font_scale_factor = 1.0
+            print("[OPTIMIZE] Content fits with standard fonts")
+        else:
+            # Over limit - use smaller fonts and trim content
+            content.font_scale_factor = 0.95
+            print(f"[OPTIMIZE] High content density - scaling fonts to {content.font_scale_factor}x and trimming")
+        
         if total_content_estimate <= SINGLE_PAGE_LIMIT:
-            print("[OPTIMIZE] Content already fits on single page")
+            print("[OPTIMIZE] Content fits on single page with dynamic font scaling")
             return content
         
         # Need to trim - reduce achievements per job progressively
@@ -434,6 +455,18 @@ class HTMLContentProcessor(ContentProcessor):
             if trimmed_total <= SINGLE_PAGE_LIMIT:
                 print(f"[OPTIMIZE] Optimized to {max_achievements} achievements per job")
                 content.experiences = trimmed_experiences
+                
+                # Recalculate font scaling for trimmed content
+                if trimmed_total <= OPTIMAL_CONTENT_MIN:
+                    content.font_scale_factor = 1.2
+                    print(f"[OPTIMIZE] Trimmed content allows larger fonts: {content.font_scale_factor}x")
+                elif trimmed_total <= OPTIMAL_CONTENT_MAX:
+                    content.font_scale_factor = 1.1
+                    print(f"[OPTIMIZE] Trimmed content allows moderate font scaling: {content.font_scale_factor}x")
+                else:
+                    content.font_scale_factor = 1.0
+                    print("[OPTIMIZE] Using standard fonts for trimmed content")
+                
                 return content
         
         # If still too long, trim to 2 achievements and reduce professional development
