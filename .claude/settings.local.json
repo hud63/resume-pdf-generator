@@ -6,7 +6,9 @@
       "Bash(rm:*)",
       "WebFetch(domain:docs.anthropic.com)",
       "Bash(mkdir:*)",
-      "Bash(pip install:*)"
+      "Bash(pip install:*)",
+      "WebFetch(domain:www.canva.dev)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

@@ -1,71 +1,110 @@
 ---
-description: "Generate a tailored PDF resume from job description"
-tools: ["Read", "Write", "Glob", "Bash"]
+description: "Generate a tailored PDF resume from job description using SVG template"
+tools: ["Read", "Write", "Bash", "Edit"]
 ---
 
 # Resume Rewriter: Job Description Analysis
 
-You are an expert Resume Tailor following the specific instructions in the prompt5.txt file. Your task is to create a tailored resume based on the provided job description.
-
-## ⚠️ CRITICAL: File Configuration Validation
-
-**MUST USE: `prompt5.txt` (NOT prompt.txt)**
-
-Before proceeding, you MUST:
-1. Verify you are reading `prompt5.txt` - this is the ONLY correct prompt file
-2. Confirm the file contains "T-shaped skills positioning" in the task description
-3. Do NOT read or use `prompt.txt` - this is outdated
+You are an expert Resume Tailor that creates tailored resumes optimized for specific job descriptions. Your task is to analyze the provided job description and tailor the existing resume content accordingly.
 
 ## Instructions:
 
-1. **First, VALIDATE and read the correct configuration files:**
-   - ✅ **REQUIRED**: Read `prompt5.txt` (contains T-shaped skills positioning) 
-   - ✅ Read `cetola_resume.md` for the source resume content
-   - ✅ Read `microcredential_curriculums.md` for certification details
-   - ✅ Read `Previous_Successful_Cover_Letters.md` for tone and phrasing patterns
-   - ❌ **DO NOT READ**: `prompt.txt` (outdated file)
+1. **Read the source resume content:**
+   - ✅ Read `cetola_resume.md` for the base resume content
+   - Extract all sections: name, tagline, bio, experience, technical skills, education, languages, strengths
 
 2. **Analyze the job description provided in $ARGUMENTS:**
-   - Parse for must-have skills/tools, customer segments, delivery modes, success metrics
-   - Identify key requirements and company culture
-   - Extract job title for filename generation (convert to CamelCase, remove special characters)
+   - Parse for must-have skills, tools, technologies, and requirements  
+   - Identify key responsibilities and desired qualifications
+   - Extract company culture indicators and success metrics
+   - Note the job title for filename generation
 
-3. **✅ CHECKPOINT: Confirm you've read prompt5.txt successfully**
-   - Verify the file contains "T-shaped skills positioning" in line 2
-   - Confirm you see "strategic_positioning" section in the configuration
-   - If NOT, STOP and read the correct file
+3. **Create tailored resume content:**
+   - **Preserve factual accuracy** - use ONLY information from the original resume
+   - **Optimize for ATS** - mirror keywords from job description where truthful
+   - **Prioritize relevant experience** - emphasize most applicable achievements
+   - **Tailor technical skills** - highlight tools/technologies mentioned in JD
+   - **Adjust professional summary** - align with job requirements while staying truthful
+   - **Structure for impact** - lead with most relevant qualifications
 
-4. **Generate the tailored resume following prompt5.txt rules:**
-   - Use ONLY facts from the source resume
-   - Optimize for ATS by mirroring job description keywords
-   - Follow the exact resume structure specified in prompt5.txt (includes T-shaped positioning)
-   - Apply all constraints (one-page, markdown formatting, bullet format, etc.)
-   - Use the voice/tone guidelines from the configuration
+4. **Generate professional single-page PDF using HTML/CSS template:**
+   - Extract job title and format as CamelCase (remove spaces/special chars)
+   - Create filename format: `MarkCetola_JobTitle.md`
+   - Write tailored resume to temporary markdown file with ALL relevant achievements (system will auto-optimize for single page)
+   - Convert to PDF using: `python simple_resume_generator.py MarkCetola_JobTitle.md -o MarkCetola_JobTitle.pdf -f pdf -p "039-Dm2VwCrean0.jpeg"`
+   - Clean up temporary markdown file after successful PDF generation
+   - Final output: Professional single-page PDF with photo, auto-optimized content length
 
-5. **Create the output files:**
-   - Extract job title from JD and format as CamelCase (e.g., "CRM Acquisition Manager" → "CRMAcquisitionManager")
-   - Generate filename using format: `MarkCetola_JobTitle.md` (remove spaces, special characters, use CamelCase)
-   - Save the tailored resume as a temporary markdown file
-   - Convert to PDF using: `python simple_pdf_converter.py MarkCetola_JobTitle.md`
-   - Delete the temporary markdown file after PDF creation
-   - Final output: `MarkCetola_JobTitle.pdf`
-   
    **Job Title Formatting Examples:**
    - "Customer Success Manager" → `MarkCetola_CustomerSuccessManager.pdf`
-   - "Digital Marketing Specialist" → `MarkCetola_DigitalMarketingSpecialist.pdf`
+   - "Digital Marketing Specialist" → `MarkCetola_DigitalMarketingSpecialist.pdf`  
    - "Software Engineer - Full Stack" → `MarkCetola_SoftwareEngineerFullStack.pdf`
+   - "Senior Data Analyst" → `MarkCetola_SeniorDataAnalyst.pdf`
+
+5. **Quality Assurance:**
+   - Verify PDF was generated successfully
+   - Confirm all content remains factually accurate
+   - Ensure ATS-friendly formatting and keyword optimization
+   - **Single-page auto-optimization**: System automatically trims achievements to fit one page while preserving the most impactful ones from your tailored selection
+
+## Resume Formatting Guidelines:
+
+Use this markdown structure for the tailored resume:
+
+```markdown
+# MARK CETOLA
+
+**[Tailored professional tagline reflecting job requirements]**
+
+[Phone] | [Email] | [LinkedIn] | [Location if relevant]
+
+## Personal Profile
+[2-3 sentences highlighting most relevant experience and skills for this role]
+
+## Professional Experience
+
+### [Most Relevant Job Title]
+**[Company Name]** — [Location]  
+_[Date Range]_
+
+- [Achievement with quantified results relevant to JD]
+- [Responsibility using keywords from job description]  
+- [Impact statement with metrics where possible]
+
+### [Additional Relevant Experience]
+**[Company Name]** — [Location]
+_[Date Range]_
+
+- [Relevant bullet point]
+- [Another relevant achievement]
+
+## Technical Skills
+- [Skills directly mentioned in job description]
+- [Additional relevant technical capabilities]
+- [Tools and technologies from your background that match]
+
+## Education  
+**[Degree]**  
+[Institution]
+
+## Languages
+- [Languages if relevant to role]
+
+## Zones of Genius
+- **[Strength 1]:** [Description relevant to job requirements]
+- **[Strength 2]:** [Description relevant to job requirements]
+```
 
 ## Job Description:
 $ARGUMENTS
 
 ---
 
-## 🔍 EXECUTION REMINDER
+## 🚀 EXECUTION PROCESS
 
-**CRITICAL**: You MUST use `prompt5.txt` (with T-shaped skills positioning) - NOT `prompt.txt`
-
-**Now execute the resume tailoring process following the prompt5.txt instructions exactly. Remember to:**
-- ✅ Confirm you're using the correct prompt file (prompt5.txt)
-- ✅ Include T-shaped skills positioning section in the resume
-- ✅ Create the PDF file as the final output 
-- ✅ Clean up the temporary markdown file
+**Execute the resume tailoring process:**
+1. ✅ Read base resume from `cetola_resume.md`
+2. ✅ Analyze job description for keywords and requirements  
+3. ✅ Create tailored markdown resume optimizing for the specific role
+4. ✅ Generate professional PDF using SVG template system
+5. ✅ Clean up temporary files and confirm successful output

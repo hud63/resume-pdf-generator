@@ -1,0 +1,21 @@
+# Professional Resume Generator Requirements
+
+# HTML/CSS to PDF generation (NEW - Primary approach)
+weasyprint>=60.0
+jinja2>=3.0.0
+
+# Original SVG-to-PDF approach (Legacy fallback)
+reportlab>=4.0.0
+svglib>=1.5.0
+
+# SVG and XML processing  
+lxml>=4.9.0
+
+# Markdown processing
+markdown>=3.5.0
+
+# Image processing for photos
+Pillow>=9.0.0
+
+# Additional utilities
+pathlib2>=2.3.7  # For older Python compatibility
