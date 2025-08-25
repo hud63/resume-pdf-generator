@@ -125,9 +125,14 @@ class HTMLContentProcessor(ContentProcessor):
             and TikTok Channel to 200,000+ subscribers on top of a busy day job, learning a suite of creative 
             and digital marketing skills from scratch (video editing, SEO, SM engagement strategies)"""
         
-        # Remove markdown formatting
+        # Remove markdown formatting and clean bullet points
         clean_bio = re.sub(r'\*\*', '', raw_bio)
         clean_bio = re.sub(r'\n+', ' ', clean_bio).strip()
+        
+        # Clean bullet points - convert "- Item:" to "Item:"
+        clean_bio = re.sub(r'-\s*([^:]+:)', r'\1', clean_bio)
+        # Clean remaining standalone hyphens
+        clean_bio = re.sub(r'\s-\s', ' ', clean_bio)
         
         # Convert to HTML paragraphs if needed
         sentences = re.split(r'[.!?]+', clean_bio)

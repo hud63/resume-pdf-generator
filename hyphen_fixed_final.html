@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARK CETOLA - Resume</title>
+    <style>
+        /* Dynamic font scaling CSS variables */
+        :root {
+            --font-scale: 1.15;
+            --header-font-size: calc(36px * var(--font-scale));
+            --tagline-font-size: calc(15px * var(--font-scale));
+            --contact-font-size: calc(12px * var(--font-scale));
+            --section-title-font-size: calc(12px * var(--font-scale));
+            --main-section-title-font-size: calc(14px * var(--font-scale));
+            --job-title-font-size: calc(13px * var(--font-scale));
+            --company-info-font-size: calc(11px * var(--font-scale));
+            --achievement-font-size: calc(10px * var(--font-scale));
+            --bio-font-size: calc(9px * var(--font-scale));
+            --section-content-font-size: calc(10px * var(--font-scale));
+            --strength-title-font-size: calc(11px * var(--font-scale));
+            --strength-description-font-size: calc(9px * var(--font-scale));
+            --tech-category-title-font-size: calc(9px * var(--font-scale));
+            --language-font-size: calc(11px * var(--font-scale));
+            --degree-font-size: calc(12px * var(--font-scale));
+            --university-font-size: calc(11px * var(--font-scale));
+            --dev-item-font-size: calc(11px * var(--font-scale));
+        }
+
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            line-height: 1.4;
+            color: #333333;
+            background: white;
+        }
+
+        /* Print optimization with single-page cutoff */
+        @media print {
+            body { 
+                margin: 0; 
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                page-break-after: avoid;
+            }
+            .page-break { page-break-before: always; }
+            .no-print { display: none; }
+            
+            /* Force single-page cutoff with better height calculations */
+            .resume-container {
+                height: 11in !important;
+                max-height: 11in !important; 
+                overflow: hidden !important;
+                page-break-after: always !important;
+            }
+            
+            .content {
+                max-height: calc(11in - 120px) !important;
+                overflow: hidden !important;
+            }
+            
+            .sidebar {
+                max-height: calc(11in - 120px) !important;
+                overflow: hidden !important;
+            }
+            
+            .main-content {
+                max-height: calc(11in - 120px) !important;
+                overflow: hidden !important;
+            }
+        }
+        
+        /* Page size control */
+        @page {
+            size: 8.5in 11in;
+            margin: 0;
+        }
+
+        /* Main container */
+        .resume-container {
+            max-width: 8.5in;
+            height: 11in;
+            margin: 0 auto;
+            background: white;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        /* Header Section */
+        .header {
+            background: #4a4e69;
+            color: white;
+            padding: 25px 35px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-height: 140px;
+        }
+
+        .header-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 30px;
+            flex-shrink: 0;
+            background: #666;
+            overflow: hidden;
+        }
+
+        .header-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .header-photo-placeholder {
+            background: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        .header-name {
+            font-size: var(--header-font-size);
+            font-weight: 700;
+            margin-bottom: 6px;
+            line-height: 1.1;
+        }
+
+        .header-tagline {
+            font-size: var(--tagline-font-size);
+            font-weight: 400;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            opacity: 0.95;
+        }
+
+        .header-contact {
+            font-size: var(--contact-font-size);
+            font-weight: 400;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .header-contact span {
+            opacity: 0.9;
+        }
+
+        /* Main content area */
+        .content {
+            display: flex;
+            height: calc(11in - 140px);
+            max-height: calc(11in - 140px);
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 35%;
+            background: #f8f9fa;
+            padding: 25px 25px;
+            border-right: 1px solid #e9ecef;
+            height: 100%;
+            max-height: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: var(--section-title-font-size);
+            font-weight: 700;
+            color: #4a4e69;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #4ba9b0;
+        }
+
+        .section-content {
+            font-size: var(--section-content-font-size);
+            line-height: 1.3;
+            color: #555;
+        }
+
+        .section-content p {
+            margin-bottom: 8px;
+        }
+
+        .section-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Strengths styling */
+        .strength-item {
+            margin-bottom: 12px;
+        }
+
+        .strength-title {
+            font-weight: 600;
+            color: #4a4e69;
+            font-size: var(--strength-title-font-size);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .strength-description {
+            font-size: var(--strength-description-font-size);
+            line-height: 1.2;
+            color: #666;
+        }
+
+        /* Technical skills */
+        .tech-category {
+            margin-bottom: 10px;
+        }
+
+        .tech-category-title {
+            font-weight: 600;
+            color: #4a4e69;
+            font-size: var(--tech-category-title-font-size);
+            text-transform: uppercase;
+            margin-bottom: 3px;
+            letter-spacing: 0.3px;
+        }
+
+        .tech-items {
+            font-size: var(--section-content-font-size);
+            color: #666;
+            line-height: 1.3;
+        }
+
+        /* Languages */
+        .language-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: var(--language-font-size);
+        }
+
+        .language-name {
+            font-weight: 500;
+            color: #4a4e69;
+        }
+
+        .language-level {
+            color: #666;
+        }
+
+        /* Main content column */
+        .main-content {
+            flex: 1;
+            padding: 25px 30px;
+            height: 100%;
+            max-height: 100%;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .main-section {
+            margin-bottom: 20px;
+        }
+
+        .main-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .main-section-title {
+            font-size: var(--main-section-title-font-size);
+            font-weight: 700;
+            color: #4a4e69;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #4ba9b0;
+        }
+
+        /* Experience entries */
+        .experience-entry {
+            margin-bottom: 18px;
+        }
+
+        .experience-entry:last-child {
+            margin-bottom: 0;
+        }
+
+        .job-title {
+            font-size: var(--job-title-font-size);
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .company-info {
+            font-size: var(--company-info-font-size);
+            color: #4ba9b0;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .job-achievements {
+            list-style: none;
+        }
+
+        .job-achievements li {
+            position: relative;
+            padding-left: 15px;
+            margin-bottom: 5px;
+            font-size: var(--achievement-font-size);
+            line-height: 1.2;
+            color: #555;
+        }
+
+        .job-achievements li:before {
+            content: "•";
+            color: #4ba9b0;
+            font-weight: 700;
+            position: absolute;
+            left: 0;
+        }
+
+        .job-achievements li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Bio content */
+        .bio-content {
+            font-size: var(--bio-font-size);
+            line-height: 1.3;
+            color: #555;
+        }
+
+        /* Education styling */
+        .education-item {
+            margin-bottom: 12px;
+        }
+
+        .degree {
+            font-weight: 600;
+            color: #4a4e69;
+            font-size: var(--degree-font-size);
+            margin-bottom: 2px;
+        }
+
+        .university {
+            font-size: var(--university-font-size);
+            color: #666;
+        }
+
+        /* Professional Development */
+        .dev-item {
+            margin-bottom: 8px;
+            font-size: var(--dev-item-font-size);
+            color: #555;
+        }
+
+        .dev-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-photo">
+                
+                <img src="C:\Users\User\Downloads\General\ResumeReWrite - SVG\039-Dm2VwCrean0.jpeg" alt="MARK CETOLA Photo">
+                
+            </div>
+            <div class="header-content">
+                <h1 class="header-name">MARK CETOLA</h1>
+                <p class="header-tagline">Gamechanging Success Architect: Fusing digital creativity with AI automation to unleash profitability</p>
+                <div class="header-contact">
+                    
+                        
+                        <span>(561) 600-8773</span>
+                        
+                        <span>mark.newagemedia@gmail.com</span>
+                        
+                        <span>linkedin.com/in/MarkCetola</span>
+                        
+                    
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- Bio Section -->
+                
+                <div class="sidebar-section">
+                    <h2 class="section-title">Bio</h2>
+                    <div class="section-content bio-content">
+                        Content Marketing & Sales professional with 8 years’ experience in SMB to enterprise companies and a strong understanding of marketing funnels, whatif analyses, and automation tools. Outside of work, highlights include: Instagram & TikTok Growth: Grew an Instagram channel to 529,000+ subscribers and a TikTok channel to 200,000+ subscribers while managing a fulltime job.<br><br>Self-Taught Skills: Developed and applied Claude Code via command line interface. Learned video editing, SEO, and social media engagement strategies from scratch.
+                    </div>
+                </div>
+                
+
+                <!-- Strengths Section -->
+                
+                <div class="sidebar-section">
+                    <h2 class="section-title">Strengths</h2>
+                    <div class="section-content">
+                        
+                        <div class="strength-item">
+                            <div class="strength-title">PUZZLES, NOT PROBLEMS:</div>
+                            <div class="strength-description">Solving business issues creatively and strategically.</div>
+                        </div>
+                        
+                        <div class="strength-item">
+                            <div class="strength-title">LOW BUDGET / HIGH IMPACT:</div>
+                            <div class="strength-description">Finding ways to improve processes and enhance efficiency.</div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+
+                <!-- Education Section -->
+                
+                <div class="sidebar-section">
+                    <h2 class="section-title">Education</h2>
+                    <div class="section-content">
+                        
+                        <div class="education-item">
+                            <div class="degree">Temple University</div>
+                            <div class="university"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+
+                <!-- Languages Section -->
+                
+                <div class="sidebar-section">
+                    <h2 class="section-title">Languages</h2>
+                    <div class="section-content">
+                        
+                        <div class="language-item">
+                            <span class="language-name">ENGLISH</span>
+                            <span class="language-level">Native</span>
+                        </div>
+                        
+                        <div class="language-item">
+                            <span class="language-name">SPANISH</span>
+                            <span class="language-level">Beginner/Intermediate</span>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+
+                <!-- Technical Section -->
+                
+                <div class="sidebar-section">
+                    <h2 class="section-title">Technical</h2>
+                    <div class="section-content">
+                        
+                        <div class="tech-category">
+                            <div class="tech-category-title">PRIMARY SKILLS</div>
+                            <div class="tech-items">Claude Code Fluency, Make.com Automation, Python, SQL</div>
+                        </div>
+                        
+                        <div class="tech-category">
+                            <div class="tech-category-title">ADDITIONAL SKILLS</div>
+                            <div class="tech-items">Linux, Google Analytics Certification, Google Ads Search Certification, Scrum Master Certified™, Six Sigma Certified™</div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Career Highlights -->
+                <div class="main-section">
+                    <h2 class="main-section-title">Career Highlights</h2>
+                    
+                    
+                        
+                        <div class="experience-entry">
+                            <div class="job-title">Client Success Lead</div>
+                            <div class="company-info">Grant Cardone Enterprises — Aventura, FL | </div>
+                            
+                            <ul class="job-achievements">
+                                
+                                <li>Launched product‑specific testimonial reels that helped debut two new SaaS modules, accelerating first‑month upsell ARR by $390 K.</li>
+                                
+                                <li>Spearheaded inclusion of blind‑spot industries in our testimonial roster, expanding TAM and adding $1.2 M in new SaaS pipeline.</li>
+                                
+                                <li>Activated 200+ attendees at each 10X event by curating HNW client panels that generated real‑time SaaS upsell inquiries.</li>
+                                
+                                <li>**Lifecycle-Based Content:** Deployed AI-based content personalization in marketing outreach (adjusting messaging to each customer’s lifecycle stage), resulting in a **32%** lift in audience engagement and an **18%** increase in conversion rate for a finance industry campaign.</li>
+                                
+                            </ul>
+                            
+                        </div>
+                        
+                        <div class="experience-entry">
+                            <div class="job-title">GTM Content Enablement Manager</div>
+                            <div class="company-info">Vanderbilt Money — Remote | </div>
+                            
+                            <ul class="job-achievements">
+                                
+                                <li>Engineered lightweight marketing ops with ManyChat + Excel + Trello, standardizing intake, tagging, and follow-ups to support 10K–24K weekly net-new followers and sustained activation.</li>
+                                
+                                <li>Operationalized a content→capture→handoff funnel: daily 3–4-video pipeline feeding high-conversion landing pages, translating audience demand into partner-ready leads</li>
+                                
+                                <li>Built cadence discipline (21 hrs/week for 15 months) and governance checklists to keep publishing, QA, and partner handoffs on schedule despite bandwidth constraints.</li>
+                                
+                                <li>Structured influencer collaborations (expat/international tax niche) as repeatable campaigns—briefs, content sequencing, and post metrics—expanding credible reach into targeted micro-communities.</li>
+                                
+                            </ul>
+                            
+                        </div>
+                        
+                        <div class="experience-entry">
+                            <div class="job-title">Revenue Operations &amp; Enablement Specialist (High-Ticket)</div>
+                            <div class="company-info">Sales Sniper Agency — Remote | </div>
+                            
+                            <ul class="job-achievements">
+                                
+                                <li>Invested $9K+ in advanced sales training to institutionalize best practices and strengthen the enablement stack.</li>
+                                
+                                <li>Implemented CRM automations to capture customer insights and orchestrate multi-touch follow-ups, increasing show rates by 20% and improving pipeline throughput.</li>
+                                
+                                <li>Standardized call flow using NEPQ, reducing average cycle time 60→35 minutes (~40%) while sustaining conversion quality.</li>
+                                
+                                <li>Drove $864K+ in high-ticket revenue (deal sizes $2.5K–$25K) by executing a consistent discovery→objection-resolution→close framework.</li>
+                                
+                            </ul>
+                            
+                        </div>
+                        
+                    
+                </div>
+
+                <!-- Professional Development -->
+                
+                <div class="main-section">
+                    <h2 class="main-section-title">Professional Development</h2>
+                    <div class="section-content">
+                        
+                        <div class="dev-item">Rob Lennon – Next-Level Prompt Engineering with AI</div>
+                        
+                        <div class="dev-item">Leila Gharani - Advanced Excel Functions in Office 365 &amp; Office 2021</div>
+                        
+                        <div class="dev-item">Jon Loomer - GTM/Meta Pixel Custom Event Mastery</div>
+                        
+                        <div class="dev-item">Certified Six Sigma™</div>
+                        
+                    </div>
+                </div>
+                
+            </main>
+        </div>
+    </div>
+</body>
+</html>
