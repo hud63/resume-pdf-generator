@@ -96,6 +96,23 @@ If current HTML/CSS → PDF approach continues having issues:
 
 See `CONTEXT_RESUME_NEXT_SESSION.md` for detailed technical analysis and next steps.
 
+## Configuration Changes
+
+### Education Section Removal (August 26, 2025)
+- **Removed Education section** from resume template to prevent content cutoff at page bottom
+- Education was identified as least important section and frequently caused single-page layout issues
+- **To restore Education section:**
+  1. Add back to HTML template: `templates/resume_template.html` (after Languages section)
+  2. Update `/jd` command structure: `.claude/commands/jd.md` 
+  3. Reference: **Temple University** - _Bachelor of Science in Real Estate (BSRE)_
+
+### Layout Order (Current):
+1. Bio (most important)
+2. Strengths (high importance)  
+3. Tools (important for job matching)
+4. Languages (lower priority)
+5. ~~Education~~ (removed - was absolute bottom)
+
 ---
 
-*Last Updated: August 24, 2025*
+*Last Updated: August 26, 2025*

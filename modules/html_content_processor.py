@@ -259,48 +259,31 @@ class HTMLContentProcessor(ContentProcessor):
         return languages[:3]  # Limit to 3 languages
     
     def _process_technical_for_html(self, raw_technical: str) -> List[Dict[str, str]]:
-        """Process technical skills into categorized format"""
-        if not raw_technical:
-            return [
-                {"title": "AUTOMATION SOFTWARE", "skills": "n8n, Make.com, Claude Code, Gemini CLI, Python"},
-                {"title": "CONTENT MANAGEMENT", "skills": "Descript, ManyChat, Canva, Capcut"},
-                {"title": "PROJECT MANAGEMENT", "skills": "Certified Six Sigma™, Jira, Trello"}
+        """Process technical skills as tools list - following v1JSON.json format"""
+        # Extract tools from Technical Skills section - present as simple list
+        tools = []
+        if raw_technical:
+            lines = raw_technical.split('\n')
+            for line in lines:
+                line = line.strip()
+                if line.startswith('- '):
+                    tool = line[2:].strip()
+                    # Clean markdown formatting
+                    tool = tool.replace('**', '').replace('*', '')
+                    if tool.endswith(':'):
+                        tool = tool[:-1]
+                    tools.append(tool)
+        
+        # Default tools from source resume if none found
+        if not tools:
+            tools = [
+                "Claude Code Fluency", "Make.com Automation", "Python", "SQL", "Linux", 
+                "Google Analytics Certification", "Google Ads Search Certification", 
+                "Scrum Master Certified™", "Six Sigma Certified™"
             ]
         
-        technical = []
-        lines = raw_technical.split('\n')
-        
-        # Simple processing - convert list to categories
-        skills = []
-        for line in lines:
-            line = line.strip()
-            if line.startswith('- '):
-                skill = line[2:].strip()
-                # Clean markdown formatting (remove ** and extra characters)
-                skill = skill.replace('**', '').replace('*', '')
-                # Remove colons at the end if they exist
-                if skill.endswith(':'):
-                    skill = skill[:-1]
-                skills.append(skill)
-        
-        # Group skills (simplified approach)
-        if len(skills) > 6:
-            mid_point = len(skills) // 2
-            technical.append({
-                "title": "PRIMARY SKILLS",
-                "skills": ", ".join(skills[:mid_point])
-            })
-            technical.append({
-                "title": "ADDITIONAL SKILLS", 
-                "skills": ", ".join(skills[mid_point:])
-            })
-        else:
-            technical.append({
-                "title": "TECHNICAL SKILLS",
-                "skills": ", ".join(skills)
-            })
-        
-        return technical
+        # Return as single tools list (not categorized) per v1JSON.json spec
+        return [{"title": "TOOLS", "skills": ", ".join(tools)}]
     
     def _process_experiences_for_html(self, raw_experience: str) -> List[Dict[str, any]]:
         """Process work experience into structured format"""
@@ -336,17 +319,24 @@ class HTMLContentProcessor(ContentProcessor):
                         dates = parts[1].strip() if len(parts) > 1 else ""
                     else:
                         company = company_line
+                elif line.startswith('_') and line.endswith('_'):
+                    # This is a date line in italic markdown format
+                    dates = line
                 elif line.startswith('- '):
                     # Achievement bullet point
                     achievement = line[2:].strip()
+                    # Clean markdown formatting from achievements
+                    achievement = re.sub(r'\*\*', '', achievement)  # Remove bold markdown
+                    achievement = re.sub(r'\*', '', achievement)    # Remove italic markdown
                     # Prioritize achievements with metrics
                     if re.search(r'\d+[%KMB$]|\$[\d,]+|\d+\+', achievement):
                         achievements.insert(0, achievement)
                     else:
                         achievements.append(achievement)
             
-            # Clean dates
-            dates = re.sub(r'_', '', dates).strip()
+            # Clean dates - remove markdown italic formatting (underscores)
+            dates = re.sub(r'_([^_]+)_', r'\1', dates).strip()  # Remove _text_ patterns
+            dates = re.sub(r'_', '', dates).strip()  # Remove any remaining underscores
             
             experiences.append({
                 "title": title,
